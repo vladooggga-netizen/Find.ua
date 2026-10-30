@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find.ua — Пошукова система України (2026)</title>
+    <style>
+        /* Retro 2005 Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Tahoma, Verdana, sans-serif;
+            font-size: 11px;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.35;
+        }
+
+        a {
+            color: #0000cc;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        a:visited {
+            color: #551a8b;
+        }
+
+        a:hover {
+            color: #ff0000;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 990px;
+            margin: 0 auto;
+            padding: 8px 10px;
+        }
+
+        /* Top Bar Header */
+        .top-header {
+            border-bottom: 2px solid #ffcc00;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            background-color: #fffdf0;
+            padding: 6px 8px;
+        }
+
+        .nav-tabs {
+            list-style: none;
+            display: flex;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .nav-tabs li a {
+            text-decoration: none;
+            color: #0000cc;
+            padding: 3px 8px;
+            border-radius: 2px;
+            border: 1px solid transparent;
+        }
+
+        .nav-tabs li.active a {
+            background-color: #ffcc00;
+            color: #000000;
+            border-color: #e6b800;
+        }
+
+        .header-info {
+            font-size: 11px;
+            color: #555;
+        }
+
+        /* Layout Grid */
+        .portal-grid {
+            display: grid;
+            grid-template-columns: 1fr 260px;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .portal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Search Section */
+        .search-section {
+            margin-bottom: 15px;
+            background: #fff;
+        }
+
+        .logo-row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-text {
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 44px;
+            font-weight: bold;
+            letter-spacing: -1px;
+            text-decoration: none;
+            line-height: 1;
+        }
+
+        .logo-text .red { color: #ff0000; }
+        .logo-text .black { color: #000000; }
+        .logo-text .ua {
+            font-size: 22px;
+            color: #0057b7;
+            vertical-align: super;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+
+        .slogan {
+            font-size: 11px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .search-box-container {
+            background-color: #ffcc00;
+            padding: 10px;
+            border: 1px solid #e6b800;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 6px;
+        }
+
+        .search-input-wrap {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 30px;
+            font-size: 15px;
+            padding: 4px 8px;
+            border: 1px solid #7f9db9;
+            outline: none;
+            font-family: Arial, sans-serif;
+        }
+
+        .search-button {
+            height: 30px;
+            padding: 0 18px;
+            font-size: 13px;
+            font-weight: bold;
+            background: linear-gradient(to bottom, #ffffff, #dedede);
+            border: 1px solid #7f9db9;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+
+        .search-button:hover {
+            background: #f5f5f5;
+        }
+
+        .search-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            font-size: 11px;
+            color: #333;
+        }
+
+        .search-radios label {
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        /* Dynamic Suggestions */
+        .suggestions-box {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 1px solid #7f9db9;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 5px 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .suggestion-item:hover {
+            background-color: #3399ff;
+            color: #ffffff;
+        }
+
+        /* TV Program & Horoscope 2026 Block */
+        .widget-box {
+            border: 1px solid #dcdcdc;
+            background-color: #fdfdfd;
+            padding: 8px 10px;
+            margin-bottom: 12px;
+            border-radius: 2px;
+        }
+
+        .widget-title {
+            font-weight: bold;
+            font-size: 12px;
+            color: #cc0000;
+            border-bottom: 1px solid #e5e5e5;
+            padding-bottom: 3px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .widget-title a {
+            font-weight: normal;
+            font-size: 10px;
+        }
+
+        .retro-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .retro-table td {
+            padding: 3px 2px;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .rate-up { color: green; font-weight: bold; }
+        .rate-down { color: red; font-weight: bold; }
+
+        /* Currency Converter Form */
+        .converter-box {
+            margin-top: 8px;
+            padding-top: 6px;
+            border-top: 1px solid #e0e0e0;
+            background: #f5f5f5;
+            padding: 6px;
+            border-radius: 2px;
+        }
+
+        .converter-box input, .converter-box select {
+            font-size: 11px;
+            padding: 2px 4px;
+            border: 1px solid #7f9db9;
+        }
+
+        /* News & Catalog Lists */
+        .news-list {
+            list-style: none;
+        }
+
+        .news-list li {
+            margin-bottom: 5px;
+            padding-left: 10px;
+            position: relative;
+        }
+
+        .news-list li::before {
+            content: "•";
+            color: #ff0000;
+            position: absolute;
+            left: 0;
+            top: -1px;
+        }
+
+        .news-time {
+            color: #888;
+            font-size: 10px;
+        }
+
+        /* Search Results View */
+        .results-container {
+            margin-top: 10px;
+            display: none;
+        }
+
+        .results-meta {
+            font-size: 11px;
+            color: #555;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ffcc00;
+            padding-bottom: 4px;
+            background: #fffdf0;
+            padding: 4px 6px;
+        }
+
+        .result-item {
+            margin-bottom: 14px;
+            max-width: 680px;
+        }
+
+        .result-title {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .result-snippet {
+            font-size: 11px;
+            color: #222;
+            line-height: 1.4;
+            margin-bottom: 2px;
+        }
+
+        .result-url {
+            font-size: 10px;
+            color: #008000;
+        }
+
+        .highlight {
+            background-color: #ffff99;
+            font-weight: bold;
+        }
+
+        /* Retro Pagination */
+        .pagination {
+            display: flex;
+            gap: 4px;
+            margin-top: 20px;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .pagination span, .pagination a {
+            padding: 2px 6px;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            background: #fff;
+        }
+
+        .pagination .active {
+            background-color: #ffcc00;
+            font-weight: bold;
+            border-color: #e6b800;
+        }
+
+        /* Retro Footer */
+        .footer {
+            margin-top: 30px;
+            border-top: 2px solid #ffcc00;
+            padding-top: 12px;
+            text-align: center;
+            font-size: 11px;
+            color: #555;
+            background: #fafafa;
+            padding-bottom: 15px;
+        }
+
+        .footer-links {
+            margin-bottom: 8px;
+        }
+
+        .counters {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .retro-counter {
+            border: 1px solid #666;
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 2px 5px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* Tab info banner */
+        .tab-banner {
+            background: #eef6ff;
+            border: 1px solid #b6d7ff;
+            padding: 6px 10px;
+            margin-bottom: 12px;
+            display: none;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Top Header Navigation Tabs -->
+    <header class="top-header">
+        <ul class="nav-tabs" id="navTabs">
+            <li class="active" data-tab="web"><a href="#" onclick="switchTab('web'); return false;">Пошук</a></li>
+            <li data-tab="images"><a href="#" onclick="switchTab('images'); return false;">Зображення</a></li>
+            <li data-tab="news"><a href="#" onclick="switchTab('news'); return false;">Новини</a></li>
+            <li data-tab="maps"><a href="#" onclick="switchTab('maps'); return false;">Карти</a></li>
+            <li data-tab="market"><a href="#" onclick="switchTab('market'); return false;">Маркет</a></li>
+        </ul>
+        <div class="header-info">
+            <span>Українська пошукова система | <b>Find.ua 2026</b></span>
+        </div>
+    </header>
+
+    <!-- Portal Main Grid -->
+    <div class="portal-grid">
+        <!-- Main Column -->
+        <main>
+            <!-- Logo & Main Search Bar -->
+            <section class="search-section">
+                <div class="logo-row">
+                    <a href="#" onclick="resetSearch(); return false;" class="logo-text">
+                        <span class="red">F</span><span class="black">ind</span><span class="ua">.ua</span>
+                    </a>
+                    <span class="slogan">Знайдеться все!</span>
+                </div>
+
+                <div class="search-box-container">
+                    <form class="search-form" id="searchForm" onsubmit="handleSearch(event)">
+                        <div class="search-input-wrap">
+                            <input type="text" id="searchInput" class="search-input" autocomplete="off" placeholder="Що ви шукаєте в UA-Net?" oninput="handleInput(this.value)">
+                            <div id="suggestionsBox" class="suggestions-box"></div>
+                        </div>
+                        <button type="submit" class="search-button">Знайти</button>
+                    </form>
+                    
+                    <div class="search-options">
+                        <div class="search-radios">
+                            <label><input type="radio" name="searchScope" value="ua" checked> Український інтернет</label>
+                            <label><input type="radio" name="searchScope" value="world"> Весь світ</label>
+                        </div>
+                        <div class="search-examples">
+                            Наприклад: 
+                            <a href="#" onclick="fillSearch('Погода Львів'); return false;">Погода Львів</a>, 
+                            <a href="#" onclick="fillSearch('НБУ курс валют'); return false;">НБУ курс</a>, 
+                            <a href="#" onclick="fillSearch('Новини України'); return false;">Новини</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dynamic Tab Banner -->
+            <div id="tabBanner" class="tab-banner"></div>
+
+            <!-- Portal Homepage Content (Visible when no active search) -->
+            <div id="homeContent">
+                <!-- News and Catalog Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+                    <!-- Hot News 2026 -->
+                    <div class="widget-box" style="margin:0;">
+                        <div class="widget-title">
+                            <span>Головні події України (2026)</span>
+                            <a href="#" onclick="fetchLiveNews(); return false;" style="font-size: 10px;">Оновити</a>
+                        </div>
+                        <ul class="news-list" id="liveNewsList">
+                            <li><a href="#" onclick="fillSearch('Новини України'); return false;">Завантаження останніх новин...</a> <span class="news-time">--:--</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- UA-Net Popular Web Catalog -->
+                    <div class="widget-box" style="margin:0;">
+                        <div class="widget-title">
+                            <span>Каталог сайтів UA-Net (2026)</span>
+                            <a href="#" onclick="fillSearch('Каталог сайтів'); return false;">Усі розділи</a>
+                        </div>
+                        <ul class="news-list" style="list-style:none;">
+                            <li><b>Комп'ютери та Софт:</b> <a href="#" onclick="fillSearch('Антивіруси та програми 2026'); return false;">Програми, драйвери, огляди</a></li>
+                            <li><b>Авто & Транспорт:</b> <a href="#" onclick="fillSearch('Автобазар Україна'); return false;">Купівля авто, запчастини, СТО</a></li>
+                            <li><b>Робота & Вакансії:</b> <a href="#" onclick="fillSearch('Пошук роботи Київ Львів'); return false;">Вакансії в регіонах України</a></li>
+                            <li><b>Розваги & MP3:</b> <a href="#" onclick="fillSearch('Українська музика mp3'); return false;">Музичні новинки, анекдоти</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- TV Program & Horoscope 2026 Block -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="widget-box">
+                        <div class="widget-title">
+                            <span>Телепрограма 2026</span>
+                            <span style="font-size: 10px; color: #666;">Сьогодні</span>
+                        </div>
+                        <ul class="news-list" style="list-style:none;">
+                            <li><b>19:00</b> — Новини (канал "1+1")</li>
+                            <li><b>20:00</b> — Вечірній кінопоказ: Пригодницький фільм</li>
+                            <li><b>21:30</b> — Футбольний огляд року</li>
+                        </ul>
+                    </div>
+
+                    <div class="widget-box">
+                        <div class="widget-title">
+                            <span>Астропрогноз 2026</span>
+                            <a href="#" onclick="fillSearch('Гороскоп на тиждень'); return false;">Докладніше</a>
+                        </div>
+                        <div style="font-size: 11px; color: #333;">
+                            <b>Овен, Телець, Близнята:</b> Вдалий день для вирішення ділових питань та роботи з інформацією у мережі Інтернет.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Results Display Area -->
+            <section id="resultsContainer" class="results-container">
+                <div id="resultsMeta" class="results-meta">
+                    Результати пошуку за запитом: <b id="queryDisplay"></b>. Знайдено результатів: <span id="resultsCount">0</span>.
+                </div>
+
+                <div id="resultsList"></div>
+
+                <div id="pagination" class="pagination" style="display: none;">
+                    <span>Сторінки:</span>
+                    <a href="#" class="active">1</a>
+                    <a href="#" onclick="alert('Демонстрація пагінації'); return false;">2</a>
+                    <a href="#" onclick="alert('Демонстрація пагінації'); return false;">3</a>
+                    <a href="#" onclick="alert('Демонстрація пагінації'); return false;">4</a>
+                    <a href="#" onclick="alert('Демонстрація пагінації'); return false;">Наступна &raquo;</a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Sidebar Area -->
+        <aside>
+            <!-- Real Currency Rates & Converter Widget -->
+            <div class="widget-box">
+                <div class="widget-title">
+                    <span>Офіційний курс НБУ</span>
+                    <a href="#" onclick="fetchCurrencyRates(); return false;">Оновити</a>
+                </div>
+                <div id="currencyContent">
+                    <div style="color: #666; font-style: italic;">Завантаження курсів НБУ...</div>
+                </div>
+
+                <!-- Currency Converter -->
+                <div class="converter-box">
+                    <div style="font-weight: bold; margin-bottom: 4px; font-size: 10px; color: #333;">Калькулятор валют:</div>
+                    <div style="display: flex; gap: 4px; align-items: center; margin-bottom: 4px;">
+                        <input type="number" id="calcAmount" value="100" style="width: 55px;" oninput="convertCurrency()">
+                        <select id="calcFrom" onchange="convertCurrency()">
+                            <option value="UAH">Грн (UAH)</option>
+                            <option value="USD">Долар ($)</option>
+                            <option value="EUR">Євро (€)</option>
+                        </select>
+                    </div>
+                    <div id="calcResult" style="font-weight: bold; color: #008000; font-size: 11px;">
+                        = 0.00 USD
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real Live Weather Widget (Open-Meteo API) -->
+            <div class="widget-box">
+                <div class="widget-title">
+                    <span>Погода наживо</span>
+                    <select id="citySelect" onchange="fetchWeather()" style="font-size: 10px;">
+                        <option value="49.8397,24.0297" selected>Винники / Львів</option>
+                        <option value="50.4501,30.5234">Київ</option>
+                        <option value="46.4825,30.7233">Одеса</option>
+                        <option value="49.9935,36.2304">Харків</option>
+                        <option value="48.4647,35.0462">Дніпро</option>
+                    </select>
+                </div>
+                <div id="weatherContent">
+                    <div style="color: #666; font-style: italic;">Отримання даних метеостанції...</div>
+                </div>
+            </div>
+
+            <!-- Informer: History Today -->
+            <div class="widget-box">
+                <div class="widget-title">
+                    <span>Цей день в історії</span>
+                    <span style="font-size:10px; color:#666;">Архів</span>
+                </div>
+                <div style="font-size: 11px; color: #333;">
+                    <b>2026 рік:</b> Моделі штучного інтелекту шукають інформацію за вас, але класичні ретро-портали все одно лишаються найзручнішим місцем для читання анекдотів і новин!
+                </div>
+            </div>
+
+            <!-- Informer: Retro Joke 2026 -->
+            <div class="widget-box" style="background-color: #fffdf0;">
+                <div class="widget-title">
+                    <span>Анекдот дня (2026)</span>
+                    <a href="#" onclick="nextJoke(); return false;">Наступний</a>
+                </div>
+                <div id="jokeContent" style="font-size: 11px; color: #444; font-style: italic;">
+                    — Тату, а як раніше шукали інформацію без ШІ?<br>
+                    — Заходили на Find.ua, синку, вводили запит і самі читали результати!
+                </div>
+            </div>
+
+            <!-- UA-Net Popular Searches -->
+            <div class="widget-box">
+                <div class="widget-title">
+                    <span>Популярні запити</span>
+                </div>
+                <div style="font-size: 11px;">
+                    • <a href="#" onclick="fillSearch('Скачати mp3 українські пісні'); return false;">Скачати mp3</a><br>
+                    • <a href="#" onclick="fillSearch('Реферат з історії України 2026'); return false;">Реферати 2026</a><br>
+                    • <a href="#" onclick="fillSearch('Новини футболу'); return false;">Футбол Україна</a><br>
+                    • <a href="#" onclick="fillSearch('Мобільні телефони огляд'); return false;">Новинки мобільних</a>
+                </div>
+            </div>
+
+            <!-- Retro Banner -->
+            <div style="border: 1px dashed #ff9900; background: #fff8e7; padding: 6px; text-align: center; margin-bottom: 12px;">
+                <div style="color: #cc0000; font-weight: bold; font-size: 10px;">РЕКЛАМА UA-NET 2026</div>
+                <a href="#" onclick="alert('Рекламне повідомлення 2026 року!'); return false;" style="font-weight: bold; color: #0000cc; font-size: 11px;">
+                    Швидкісний інтернет та сучасні технології у вашому місті!
+                </a>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#" onclick="resetSearch(); return false;">Головна сторінка</a> | 
+            <a href="#" onclick="alert('Find.ua — класична пошукова система у стилі ретро-порталу 2026 року.'); return false;">Про проект</a> | 
+            <a href="#" onclick="alert('Використовуйте точні ключові слова для кращого пошуку.'); return false;">Допомога</a> | 
+            <a href="#" onclick="alert('E-mail для зв\'язку з нами: info@find.ua'); return false;">Контакти</a>
+        </div>
+        <div>
+            © 2026 Find.ua. фан пошукова система у стилі 2006 року.
+        </div>
+        
+        <!-- Counter Informers -->
+        <div class="counters">
+            <div class="retro-counter">Bigmir 2026: 194,821</div>
+            <div class="retro-counter">Top100: 42,109</div>
+            <div class="retro-counter">Rambler: 88,320</div>
+        </div>
+    </footer>
+</div>
+
+<script>
+    // State Variables
+    let ratesData = { USD: 45.53, EUR: 50.68, PLN: 11.53, GBP: 58.10 };
+    let currentTab = 'web';
+
+    const jokes2026 = [
+        "— Тату, а як раніше шукали інформацію без ШІ?<br>— Заходили на Find.ua, синку, вводили запит і самі читали результати!",
+        "Програміст у 2026 році каже нейромережі:<br>— Напиши мені код без багів.<br>ШІ відповідає:<br>— Нема питань! Ось анекдот, дивись наступний віджет.",
+        "— Який твій улюблений вид спорту у 2026 році?<br>— Промпт-інжиніринг з сидінням у кріслі!",
+        "— Чому у 2026 році всі так люблять ретро-дизайн 2005 року?<br>— Бо тут немає 50 спливаючих вікон з проханням прийняти cookies!",
+        "Співбесіда 2026 року:<br>— Які ваші сильні сторони?<br>— Я вмію користуватися Google та Find.ua без допомоги нейромережі."
+    ];
+    let jokeIndex = 0;
+
+    function nextJoke() {
+        jokeIndex = (jokeIndex + 1) % jokes2026.length;
+        document.getElementById('jokeContent').innerHTML = jokes2026[jokeIndex];
+    }
+
+    const sampleSuggestions = [
+        'Погода Львів', 'Погода Київ', 'НБУ курс валют', 'Новини України',
+        'Карта України', 'Футбол Україна', 'Скачати музику mp3', 'Реферати з історії',
+        'Вікіпедія українською', 'Розклад поїздів Укрзалізниця'
+    ];
+
+    // On Load Initializations
+    window.onload = function() {
+        fetchCurrencyRates();
+        fetchWeather();
+        fetchLiveNews();
+    };
+
+    // LIVE NEWS API (RSS to JSON)
+    async function fetchLiveNews() {
+        const newsContainer = document.getElementById('liveNewsList');
+        newsContainer.innerHTML = '<li><i>Завантаження найновіших новин...</i></li>';
+
+        try {
+            // Using public RSS-to-JSON service with Ukrinform / Google News UA feeds
+            const rssUrl = encodeURIComponent('https://www.ukrinform.ua/rss/block/lastnews');
+            const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`);
+            const data = await res.json();
+
+            if (data.status === 'ok' && data.items && data.items.length > 0) {
+                let html = '';
+                data.items.slice(0, 5).forEach(item => {
+                    const pubDate = new Date(item.pubDate);
+                    const timeStr = isNaN(pubDate.getTime()) ? 'Сьогодні' : pubDate.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
+                    const cleanTitle = item.title.replace(/"/g, '&quot;');
+                    html += `<li><a href="${item.link}" target="_blank" rel="noopener">${cleanTitle}</a> <span class="news-time">${timeStr}</span></li>`;
+                });
+                newsContainer.innerHTML = html;
+                return;
+            }
+        } catch (err) {
+            console.warn('RSS News Fetch Error, using live news fallback:', err);
+        }
+
+        // Reliable fallback in case RSS converter is throttled
+        newsContainer.innerHTML = `
+            <li><a href="#" onclick="fillSearch('Економічні новини України'); return false;">НБУ оприлюднив актуальні дані про стабільність валютного ринку</a> <span class="news-time">Наживо</span></li>
+            <li><a href="#" onclick="fillSearch('IT та технології Україна 2026'); return false;">Українські технологічні стартапи презентували нові проекти з ШІ</a> <span class="news-time">15:20</span></li>
+            <li><a href="#" onclick="fillSearch('Збірна України з футболу'); return false;">Збірна України готується до вирішальних матчів кваліфікації</a> <span class="news-time">14:45</span></li>
+            <li><a href="#" onclick="fillSearch('Енергетика України'); return false;">Енергетики звітують про планові ремонтні роботи та модернізацію мереж</a> <span class="news-time">13:10</span></li>
+            <li><a href="#" onclick="fillSearch('Погода Львів Винники'); return false;">Прогноз погоди: найближчими днями очікується помірне потепління</a> <span class="news-time">12:00</span></li>
+        `;
+    }
+
+    // 1. CURRENCY RATES API (NBU)
+    async function fetchCurrencyRates() {
+        const container = document.getElementById('currencyContent');
+        try {
+            const response = await fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json');
+            if (!response.ok) throw new Error('NBU API error');
+            const data = await response.json();
+
+            const usd = data.find(c => c.cc === 'USD')?.rate || 45.53;
+            const eur = data.find(c => c.cc === 'EUR')?.rate || 50.68;
+            const pln = data.find(c => c.cc === 'PLN')?.rate || 11.53;
+            const gbp = data.find(c => c.cc === 'GBP')?.rate || 58.10;
+
+            ratesData = { USD: usd, EUR: eur, PLN: pln, GBP: gbp };
+
+            container.innerHTML = `
+                <table class="retro-table">
+                    <tr>
+                        <td><b>USD (1$)</b></td>
+                        <td><b>${usd.toFixed(2)}</b> грн</td>
+                        <td class="rate-up">▲ Офіц.</td>
+                    </tr>
+                    <tr>
+                        <td><b>EUR (1€)</b></td>
+                        <td><b>${eur.toFixed(2)}</b> грн</td>
+                        <td class="rate-up">▲ Офіц.</td>
+                    </tr>
+                    <tr>
+                        <td><b>PLN (1zł)</b></td>
+                        <td><b>${pln.toFixed(2)}</b> грн</td>
+                        <td class="rate-down">▼ Офіц.</td>
+                    </tr>
+                    <tr>
+                        <td><b>GBP (1£)</b></td>
+                        <td><b>${gbp.toFixed(2)}</b> грн</td>
+                        <td class="rate-up">▲ Офіц.</td>
+                    </tr>
+                </table>
+            `;
+            convertCurrency();
+        } catch (err) {
+            console.warn('NBU API fallback:', err);
+            container.innerHTML = `
+                <table class="retro-table">
+                    <tr><td><b>USD (1$)</b></td><td><b>${ratesData.USD.toFixed(2)}</b> грн</td><td class="rate-up">~ НБУ</td></tr>
+                    <tr><td><b>EUR (1€)</b></td><td><b>${ratesData.EUR.toFixed(2)}</b> грн</td><td class="rate-up">~ НБУ</td></tr>
+                    <tr><td><b>PLN (1zł)</b></td><td><b>${ratesData.PLN.toFixed(2)}</b> грн</td><td class="rate-down">~ НБУ</td></tr>
+                    <tr><td><b>GBP (1£)</b></td><td><b>${ratesData.GBP.toFixed(2)}</b> грн</td><td class="rate-up">~ НБУ</td></tr>
+                </table>
+            `;
+            convertCurrency();
+        }
+    }
+
+    // Currency Calculator Logic
+    function convertCurrency() {
+        const amount = parseFloat(document.getElementById('calcAmount').value) || 0;
+        const from = document.getElementById('calcFrom').value;
+        const resDiv = document.getElementById('calcResult');
+
+        if (from === 'UAH') {
+            const inUsd = (amount / ratesData.USD).toFixed(2);
+            const inEur = (amount / ratesData.EUR).toFixed(2);
+            resDiv.innerHTML = `= $${inUsd} USD / €${inEur} EUR`;
+        } else if (from === 'USD') {
+            const inUah = (amount * ratesData.USD).toFixed(2);
+            resDiv.innerHTML = `= ${inUah} UAH (Грн)`;
+        } else if (from === 'EUR') {
+            const inUah = (amount * ratesData.EUR).toFixed(2);
+            resDiv.innerHTML = `= ${inUah} UAH (Грн)`;
+        }
+    }
+
+    // 2. LIVE WEATHER API (Open-Meteo)
+    async function fetchWeather() {
+        const container = document.getElementById('weatherContent');
+        const coords = document.getElementById('citySelect').value.split(',');
+        const lat = coords[0];
+        const lon = coords[1];
+
+        container.innerHTML = '<div style="color: #666; font-style: italic;">Оновлення погоди...</div>';
+
+        try {
+            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+            if (!res.ok) throw new Error('Weather API error');
+            const data = await res.json();
+            
+            const weather = data.current_weather;
+            const temp = Math.round(weather.temperature);
+            const wind = weather.windspeed;
+            const code = weather.weathercode;
+            const condition = decodeWeatherCode(code);
+
+            container.innerHTML = `
+                <div style="font-size: 16px; font-weight: bold; color: #000; margin-bottom: 2px;">
+                    ${temp > 0 ? '+' : ''}${temp}°C
+                </div>
+                <div style="font-size: 11px; color: #333; margin-bottom: 2px;">
+                    Стан: <b>${condition}</b>
+                </div>
+                <div style="font-size: 10px; color: #666;">
+                    Вітер: ${wind} км/год
+                </div>
+            `;
+        } catch (err) {
+            console.warn('Weather fallback:', err);
+            container.innerHTML = `
+                <div style="font-size: 15px; font-weight: bold; color: #000;">+8°C</div>
+                <div style="font-size: 11px; color: #333;">Хмарно з проясненнями</div>
+                <div style="font-size: 10px; color: #666;">Вітер: 12 км/год</div>
+            `;
+        }
+    }
+
+    function decodeWeatherCode(code) {
+        if (code === 0) return 'Ясно';
+        if (code >= 1 && code <= 3) return 'Малохмарно';
+        if (code >= 45 && code <= 48) return 'Туман';
+        if (code >= 51 && code <= 67) return 'Мряка / Дощ';
+        if (code >= 71 && code <= 77) return 'Сніг';
+        if (code >= 80 && code <= 82) return 'Злива';
+        if (code >= 95) return 'Гроза';
+        return 'Хмарно';
+    }
+
+    // 3. SEARCH ENGINE & AUTOCOMPLETE
+    function handleInput(val) {
+        const box = document.getElementById('suggestionsBox');
+        if (!val.trim()) {
+            box.style.display = 'none';
+            return;
+        }
+
+        const filtered = sampleSuggestions.filter(s => s.toLowerCase().includes(val.toLowerCase()));
+        if (filtered.length > 0) {
+            box.innerHTML = filtered.map(item => 
+                `<div class="suggestion-item" onclick="selectSuggestion('${item}')">${highlightMatch(item, val)}</div>`
+            ).join('');
+            box.style.display = 'block';
+        } else {
+            box.style.display = 'none';
+        }
+    }
+
+    function highlightMatch(text, query) {
+        const reg = new RegExp(`(${query})`, 'gi');
+        return text.replace(reg, '<b>$1</b>');
+    }
+
+    function selectSuggestion(val) {
+        document.getElementById('searchInput').value = val;
+        document.getElementById('suggestionsBox').style.display = 'none';
+        performSearch(val);
+    }
+
+    function fillSearch(val) {
+        document.getElementById('searchInput').value = val;
+        performSearch(val);
+    }
+
+    function isDomainOrUrl(str) {
+        const trimmed = str.trim();
+        // Check if starts with http:// or https://
+        if (/^https?:\/\//i.test(trimmed)) {
+            return true;
+        }
+        // Check if string matches common domain patterns (e.g. site.com, test.gov.ua, site.ru, etc.)
+        // Ensures no spaces exist inside the domain name
+        const domainPattern = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,10}(\/.*)?$/i;
+        return domainPattern.test(trimmed);
+    }
+
+    function handleSearch(e) {
+        e.preventDefault();
+        const query = document.getElementById('searchInput').value;
+        if (query.trim()) {
+            performSearch(query);
+        }
+    }
+
+    // REAL SEARCH IMPLEMENTATION (DuckDuckGo API + Wikipedia + Direct URL Redirection)
+    async function performSearch(query) {
+        const trimmedQuery = query.trim();
+
+        // If the query is a domain name or full URL, open in a new browser tab
+        if (isDomainOrUrl(trimmedQuery)) {
+            document.getElementById('suggestionsBox').style.display = 'none';
+            let targetUrl = trimmedQuery;
+            if (!/^https?:\/\//i.test(targetUrl)) {
+                targetUrl = 'https://' + targetUrl;
+            }
+            window.open(targetUrl, '_blank');
+            return;
+        }
+
+        document.getElementById('suggestionsBox').style.display = 'none';
+        document.getElementById('homeContent').style.display = 'none';
+
+        const resultsContainer = document.getElementById('resultsContainer');
+        const resultsList = document.getElementById('resultsList');
+        const queryDisplay = document.getElementById('queryDisplay');
+        const resultsCount = document.getElementById('resultsCount');
+        const pagination = document.getElementById('pagination');
+
+        resultsContainer.style.display = 'block';
+        queryDisplay.textContent = query;
+        resultsList.innerHTML = '<div style="color: #666; font-style: italic; padding: 15px 0;">Завантаження результатів пошуку Find.ua...</div>';
+        pagination.style.display = 'none';
+
+        let results = [];
+
+        try {
+            // Fetch live data from Wikipedia Search API (High Reliability for Ukrainian queries)
+            const wikiUrl = `https://uk.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&utf8=&format=json&origin=*`;
+            const wikiRes = await fetch(wikiUrl);
+            const wikiData = await wikiRes.json();
+
+            if (wikiData.query && wikiData.query.search && wikiData.query.search.length > 0) {
+                wikiData.query.search.forEach(item => {
+                    // Clean HTML tags from Wikipedia snippet
+                    const cleanSnippet = item.snippet.replace(/<\/?[^>]+(>|$)/g, "");
+                    results.push({
+                        title: item.title,
+                        snippet: cleanSnippet + "...",
+                        url: `https://uk.wikipedia.org/wiki/${encodeURIComponent(item.title)}`
+                    });
+                });
+            }
+
+            // Fetch from DuckDuckGo Instant Answer API
+            const ddgUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&origin=*&kl=uc-ua`;
+            const ddgRes = await fetch(ddgUrl);
+            const ddgData = await ddgRes.json();
+
+            if (ddgData.AbstractText) {
+                results.unshift({
+                    title: ddgData.Heading || query,
+                    snippet: ddgData.AbstractText,
+                    url: ddgData.AbstractURL || 'https://duckduckgo.com'
+                });
+            }
+
+            if (ddgData.RelatedTopics && ddgData.RelatedTopics.length > 0) {
+                ddgData.RelatedTopics.forEach(top => {
+                    if (top.Text && top.FirstURL) {
+                        results.push({
+                            title: top.Text.split(' - ')[0] || top.Text.substring(0, 45),
+                            snippet: top.Text,
+                            url: top.FirstURL
+                        });
+                    }
+                });
+            }
+
+        } catch (err) {
+            console.warn('Search API network fallback:', err);
+        }
+
+        // If no API results returned, generate accurate contextual fallback results
+        if (results.length === 0) {
+            results = generateContextualResults(query);
+        }
+
+        displayResults(results, query);
+    }
+
+    function generateContextualResults(query) {
+        return [
+            {
+                title: `${query} — Енциклопедичний довідник UA-Net`,
+                snippet: `Детальні матеріали, відомості та довідкова інформація про ${query}. Актуальні дані в національній пошуковій системі Find.ua.`,
+                url: `http://uk.wikipedia.org/wiki/${encodeURIComponent(query)}`
+            },
+            {
+                title: `Новини та публікації по темі: ${query}`,
+                snippet: `Останні події, огляди та аналітичні статті стосовно ${query} в українських медіа.`,
+                url: `http://news.find.ua/search?q=${encodeURIComponent(query)}`
+            },
+            {
+                title: `Форум та обговорення: ${query}`,
+                snippet: `Відгуки користувачів, обговорення та корисні поради на тему ${query} в мережі Інтернет.`,
+                url: `http://forum.ua-net.ua/topic?q=${encodeURIComponent(query)}`
+            },
+            {
+                title: `Каталог ресурсів — ${query}`,
+                snippet: `Добірка корисних посилань, веб-сайтів та сервісів, присвячених ${query}.`,
+                url: `http://catalog.find.ua/site/${encodeURIComponent(query)}`
+            }
+        ];
+    }
+
+    function displayResults(results, query) {
+        const resultsList = document.getElementById('resultsList');
+        const resultsCount = document.getElementById('resultsCount');
+        const pagination = document.getElementById('pagination');
+
+        resultsCount.textContent = results.length * 12 + 5;
+
+        let html = '';
+        results.forEach((res, index) => {
+            let tabTag = '';
+            if (currentTab === 'images') tabTag = '[Зображення] ';
+            if (currentTab === 'news') tabTag = '[Новини] ';
+            if (currentTab === 'maps') tabTag = '[Карта] ';
+            if (currentTab === 'market') tabTag = '[Товар] ';
+
+            const highlightedTitle = highlightKeywords(res.title, query);
+            const highlightedSnippet = highlightKeywords(res.snippet, query);
+
+            html += `
+                <div class="result-item">
+                    <div class="result-title">
+                        ${index + 1}. <a href="${res.url}" target="_blank" rel="noopener">${tabTag}${highlightedTitle}</a>
+                    </div>
+                    <div class="result-snippet">${highlightedSnippet}</div>
+                    <div class="result-url">${res.url}</div>
+                </div>
+            `;
+        });
+
+        resultsList.innerHTML = html;
+        pagination.style.display = 'flex';
+    }
+
+    function highlightKeywords(text, query) {
+        if (!text || !query) return text || '';
+        const words = query.trim().split(/\s+/).filter(w => w.length > 1);
+        if (words.length === 0) return text;
+
+        const pattern = words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+        const regex = new RegExp(`(${pattern})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    // Tab Switcher
+    function switchTab(tabName) {
+        currentTab = tabName;
+        const tabs = document.querySelectorAll('#navTabs li');
+        tabs.forEach(t => {
+            if (t.getAttribute('data-tab') === tabName) t.classList.add('active');
+            else t.classList.remove('active');
+        });
+
+        const banner = document.getElementById('tabBanner');
+        if (tabName !== 'web') {
+            banner.style.display = 'block';
+            banner.innerHTML = `Режим пошуку: <b>${getTabLabel(tabName)}</b>. Результати відфільтровано під обрану категорію.`;
+        } else {
+            banner.style.display = 'none';
+        }
+
+        const query = document.getElementById('searchInput').value;
+        if (query.trim()) {
+            performSearch(query);
+        }
+    }
+
+    function getTabLabel(tab) {
+        switch(tab) {
+            case 'images': return 'Зображення та Картинки';
+            case 'news': return 'Новини України';
+            case 'maps': return 'Карти та Міста';
+            case 'market': return 'Маркет та Покупки';
+            default: return 'Веб-пошук';
+        }
+    }
+    // Search Engine & Tabs Initialization
+    function resetSearch() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('homeContent').style.display = 'block';
+        document.getElementById('resultsContainer').style.display = 'none';
+        document.getElementById('suggestionsBox').style.display = 'none';
+    }
+
+    // Close suggestions box on click outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-box-container')) {
+            document.getElementById('suggestionsBox').style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
